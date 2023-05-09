@@ -22,6 +22,7 @@ class GravityModelFofR final : public GravityModel<NDIM> {
     bool use_screening_method{true};
     bool screening_enforce_largescale_linear{false};
     double screening_linear_scale_hmpc{0.0};
+	double screening_efficiency{1.0};
 
     // For solving the exact equation
     bool solve_exact_equation{false};
@@ -53,6 +54,7 @@ class GravityModelFofR final : public GravityModel<NDIM> {
             std::cout << "# nfofr            : " << nfofr << "\n";
             std::cout << "# Screening method : " << use_screening_method << "\n";
             if (use_screening_method) {
+				std::cout << "# screening_efficiency : " << screening_efficiency << "\n";
                 std::cout << "# Enforce correct linear evolution : " << screening_enforce_largescale_linear << "\n";
                 std::cout << "# Scale for which we enforce this  : " << screening_linear_scale_hmpc << " h/Mpc\n";
             }
@@ -148,7 +150,7 @@ class GravityModelFofR final : public GravityModel<NDIM> {
                     1.5 * fofr0 *
                     std::pow((OmegaM + 4.0 * (1.0 - OmegaM)) / (1.0 / (a * a * a) * OmegaM + 4.0 * (1.0 - OmegaM)),
                              nfofr + 1.0);
-                double screenfac = std::abs(PhiCrit / PhiNewton);
+                double screenfac = screening_efficiency * std::abs(PhiCrit / PhiNewton);
                 return screenfac > 1.0 ? 1.0 : screenfac;
             };
 
@@ -241,6 +243,7 @@ class GravityModelFofR final : public GravityModel<NDIM> {
         if (use_screening_method) {
             screening_enforce_largescale_linear = param.get<bool>("gravity_model_screening_enforce_largescale_linear");
             screening_linear_scale_hmpc = param.get<double>("gravity_model_screening_linear_scale_hmpc");
+        screening_efficiency = param.get<double>("gravity_model_screening_efficiency");
         }
         solve_exact_equation = param.get<bool>("gravity_model_fofr_exact_solution");
         if (solve_exact_equation) {

@@ -92,6 +92,7 @@ void read_parameterfile(ParameterMap & param, std::string filename) {
         if (param.get<std::string>("gravity_model") == "f(R)") {
             param["gravity_model_fofr_fofr0"] = lfp.read_double("gravity_model_fofr_fofr0", 1e-5, REQUIRED);
             param["gravity_model_fofr_nfofr"] = lfp.read_double("gravity_model_fofr_nfofr", 1.0, OPTIONAL);
+			param["gravity_model_screening_efficiency"] = lfp.read_double("gravity_model_screening_efficiency", 1.0, OPTIONAL);
 
             // Screening approximation
             param["gravity_model_screening"] = lfp.read_bool("gravity_model_screening", true, OPTIONAL);
